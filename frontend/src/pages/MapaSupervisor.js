@@ -50,7 +50,7 @@ function MapaSupervisor({ usuario, onLogout }) {
         cargarUnidades();
 
         // Conectar Socket.IO
-        const newSocket = io('http://localhost:3000');
+        const newSocket = io('https://sistema-policia-api.onrender.com');
         setSocket(newSocket);
 
         newSocket.on('connect', () => {
