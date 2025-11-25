@@ -106,7 +106,7 @@ export default function MapScreen({ route, navigation }) {
 
     const conectarSocket = () => {
         // Cambia esta IP por la IP de tu computadora
-        const socket = io('http://172.30.24.204:3000');
+        const socket = io('https://sistema-policia-api.onrender.com/');
         socketRef.current = socket;
 
         socket.on('connect', () => {

@@ -1,49 +1,31 @@
 {
   "expo": {
-    "name": "Sistema Policial",
+    "name": "SistemaPolicial",
     "slug": "sistema-policial",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#2ecc71"
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.sistemapolicial.app",
-      "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "Esta aplicación necesita acceso a tu ubicación para rastrear tu posición mientras estás de patrulla.",
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "Esta aplicación necesita acceso a tu ubicación para rastrear tu posición mientras estás de patrulla."
-      }
-    },
+    "platforms": ["ios", "android"],
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#2ecc71"
-      },
       "package": "com.sistemapolicial.app",
+      "versionCode": 1,
       "permissions": [
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION",
-        "FOREGROUND_SERVICE"
+        "ACCESS_BACKGROUND_LOCATION"
       ]
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     },
     "plugins": [
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Permitir que la aplicación use tu ubicación para rastreo GPS."
+          "locationAlwaysAndWhenInUsePermission": "Necesitamos tu ubicación para el rastreo GPS"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "ed138b3e-ffc6-4f38-915f-63904411bc66"
+      }
+    }
   }
 }

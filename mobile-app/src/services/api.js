@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // CAMBIA ESTA IP POR LA IP DE TU COMPUTADORA
 // Para encontrar tu IP en Windows: abre CMD y escribe: ipconfig
 // Busca "IPv4 Address" de tu adaptador WiFi/Ethernet
-const API_URL = 'http://172.30.24.204:3000/api'; // CAMBIAR ESTA IP
+const API_URL = 'https://sistema-policia-api.onrender.com/'; // CAMBIAR ESTA IP
 
 const api = axios.create({
     baseURL: API_URL,
