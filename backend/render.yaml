@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: sistema-policia-backend
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
