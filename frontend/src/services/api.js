@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const socket = io('https://sistema-policia-api.onrender.com');
+const API_URL = 'https://sistema-policia-api.onrender.com/api';
 
 const api = axios.create({
     baseURL: API_URL,
