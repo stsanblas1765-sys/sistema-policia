@@ -1,3 +1,7 @@
+const pool = require('../config/database');
+const jwt = require('jsonwebtoken');
+
+// Login
 const login = async (req, res) => {
     try {
         const { numero_empleado, password } = req.body;
@@ -60,4 +64,52 @@ const login = async (req, res) => {
             mensaje: 'Error en el servidor' 
         });
     }
+};
+
+// Logout
+const logout = async (req, res) => {
+    try {
+        const usuarioId = req.usuario.id;
+
+        // Cerrar sesión activa
+        await pool.query(
+            'UPDATE sesiones SET activa = false, fin_sesion = NOW() WHERE usuario_id = ? AND activa = true',
+            [usuarioId]
+        );
+
+        res.json({
+            success: true,
+            mensaje: 'Sesión cerrada correctamente'
+        });
+    } catch (error) {
+        console.error('Error en logout:', error);
+        res.status(500).json({ 
+            success: false, 
+            mensaje: 'Error al cerrar sesión' 
+        });
+    }
+};
+
+// Verificar Token
+const verificarToken = async (req, res) => {
+    try {
+        // Si llegó aquí, el token es válido (verificado por el middleware)
+        res.json({
+            success: true,
+            usuario: req.usuario
+        });
+    } catch (error) {
+        console.error('Error verificando token:', error);
+        res.status(500).json({ 
+            success: false, 
+            mensaje: 'Error al verificar token' 
+        });
+    }
+};
+
+// Exportar todas las funciones
+module.exports = {
+    login,
+    logout,
+    verificarToken
 };
