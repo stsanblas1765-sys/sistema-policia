@@ -1,72 +1,78 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import MapaSupervisor from './pages/MapaSupervisor';
 import PantallaPatrulla from './pages/PantallaPatrulla';
 import './App.css';
 
 function App() {
-    const [usuario, setUsuario] = useState(null);
-    const [cargando, setCargando] = useState(true);
+  const [usuario, setUsuario] = React.useState(null);
 
-    useEffect(() => {
-        // Verificar si hay sesión guardada
-        const usuarioGuardado = localStorage.getItem('usuario');
-        const token = localStorage.getItem('token');
-        
-        if (usuarioGuardado && token) {
-            try {
-                setUsuario(JSON.parse(usuarioGuardado));
-            } catch (error) {
-                console.error('Error parseando usuario:', error);
-                localStorage.removeItem('usuario');
-                localStorage.removeItem('token');
-            }
-        }
-        
-        setCargando(false);
-    }, []);
-
-    const handleLoginSuccess = (user) => {
-        console.log('✅ Usuario autenticado:', user);
-        setUsuario(user);
-    };
-
-    const handleLogout = () => {
-        console.log('👋 Cerrando sesión');
-        setUsuario(null);
-    };
-
-    if (cargando) {
-        return (
-            <div className="cargando-container">
-                <div className="spinner-grande"></div>
-                <p>Cargando...</p>
-            </div>
-        );
+  React.useEffect(() => {
+    // Verificar si hay usuario guardado
+    const usuarioGuardado = localStorage.getItem('usuario');
+    if (usuarioGuardado) {
+      setUsuario(JSON.parse(usuarioGuardado));
     }
+  }, []);
 
-    // Si no hay usuario, mostrar login
-    if (!usuario) {
-        return <Login onLoginSuccess={handleLoginSuccess} />;
-    }
+  const handleLogin = (user) => {
+    setUsuario(user);
+    localStorage.setItem('usuario', JSON.stringify(user));
+  };
 
-    // Si es supervisor, mostrar mapa
-    if (usuario.rol === 'supervisor') {
-        return <MapaSupervisor usuario={usuario} onLogout={handleLogout} />;
-    }
+  const handleLogout = () => {
+    setUsuario(null);
+    localStorage.removeItem('usuario');
+    localStorage.removeItem('token');
+  };
 
-    // Si es patrulla, mostrar mensaje de app móvil
-    if (usuario.rol === 'patrulla') {
-        return <PantallaPatrulla usuario={usuario} onLogout={handleLogout} />;
-    }
+  return (
+    <Router>
+      <div className="App">
+        <Routes>
+          {/* Ruta de Login */}
+          <Route 
+            path="/" 
+            element={
+              usuario ? (
+                <Navigate to={usuario.rol === 'supervisor' ? '/mapa' : '/patrulla'} replace />
+              ) : (
+                <Login onLogin={handleLogin} />
+              )
+            } 
+          />
 
-    // Por si acaso
-    return (
-        <div className="error-container">
-            <h1>Rol no reconocido</h1>
-            <button onClick={handleLogout}>Cerrar Sesión</button>
-        </div>
-    );
+          {/* Ruta del Mapa (Supervisores) */}
+          <Route 
+            path="/mapa" 
+            element={
+              usuario && usuario.rol === 'supervisor' ? (
+                <MapaSupervisor usuario={usuario} onLogout={handleLogout} />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            } 
+          />
+
+          {/* Ruta de Patrulla */}
+          <Route 
+            path="/patrulla" 
+            element={
+              usuario && usuario.rol === 'patrulla' ? (
+                <PantallaPatrulla usuario={usuario} onLogout={handleLogout} />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            } 
+          />
+
+          {/* Ruta por defecto */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
+    </Router>
+  );
 }
 
 export default App;
