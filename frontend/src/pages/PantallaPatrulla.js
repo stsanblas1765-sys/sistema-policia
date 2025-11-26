@@ -83,6 +83,13 @@ function PantallaPatrulla() {
     try {
       const token = localStorage.getItem('token');
       
+      if (!token) {
+        console.error('No hay token disponible');
+        setEstado('❌ Sesión expirada, vuelve a iniciar sesión');
+        setTimeout(() => navigate('/'), 3000);
+        return;
+      }
+      
       const response = await fetch('https://sistema-policia-api.onrender.com/api/ubicaciones', {
         method: 'POST',
         headers: {
@@ -96,6 +103,15 @@ function PantallaPatrulla() {
         })
       });
 
+      if (response.status === 401) {
+        console.error('Token inválido o expirado');
+        setEstado('❌ Sesión expirada, vuelve a iniciar sesión');
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+        setTimeout(() => navigate('/'), 3000);
+        return;
+      }
+
       if (response.ok) {
         // Emitir por Socket.IO para tiempo real
         socket.emit('actualizarUbicacion', {
@@ -106,6 +122,7 @@ function PantallaPatrulla() {
       }
     } catch (error) {
       console.error('Error al enviar ubicación:', error);
+      setEstado(`❌ Error de conexión: ${error.message}`);
     }
   };
 
