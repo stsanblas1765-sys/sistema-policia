@@ -90,7 +90,7 @@ function MapaSupervisor({ usuario, onLogout }) {
                 // Centrar en la primera unidad si existe
                 if (response.data.unidades.length > 0 && !centroMapa) {
                     const primera = response.data.unidades[0];
-                    setCentroMapa([primera.latitud, primera.longitud]);
+                    setCentroMapa([parseFloat(primera.latitud), parseFloat(primera.longitud)]);
                 }
             }
             
@@ -104,7 +104,7 @@ function MapaSupervisor({ usuario, onLogout }) {
     const seleccionarUnidad = async (unidad) => {
         console.log('🎯 Unidad seleccionada:', unidad);
         setUnidadSeleccionada(unidad);
-        setCentroMapa([unidad.latitud, unidad.longitud]);
+        setCentroMapa([parseFloat(unidad.latitud), parseFloat(unidad.longitud)]);
         
         try {
             const response = await ubicacionAPI.obtenerRutaUnidad(unidad.id, { horas: 24 });
@@ -134,7 +134,8 @@ function MapaSupervisor({ usuario, onLogout }) {
             localStorage.removeItem('token');
             localStorage.removeItem('usuario');
             if (socket) socket.close();
-            onLogout();
+            // Recargar la página para ir al login
+            window.location.href = '/';
         }
     };
 
@@ -215,11 +216,11 @@ function MapaSupervisor({ usuario, onLogout }) {
                                             <span>🕐</span> {formatearFecha(unidad.inicio_sesion)}
                                         </p>
                                         <p className="unidad-info">
-                                            <span>📍</span> {unidad.latitud.toFixed(6)}, {unidad.longitud.toFixed(6)}
+                                            <span>📍</span> {parseFloat(unidad.latitud).toFixed(6)}, {parseFloat(unidad.longitud).toFixed(6)}
                                         </p>
                                         {unidad.velocidad > 0 && (
                                             <p className="unidad-info">
-                                                <span>🚗</span> {unidad.velocidad.toFixed(1)} km/h
+                                                <span>🚗</span> {parseFloat(unidad.velocidad).toFixed(1)} km/h
                                             </p>
                                         )}
                                     </div>
@@ -259,7 +260,7 @@ function MapaSupervisor({ usuario, onLogout }) {
                                         <p>👮 {unidad.numero_empleado}</p>
                                         <p>🕐 {formatearFecha(unidad.timestamp)}</p>
                                         {unidad.velocidad > 0 && (
-                                            <p>🚗 {unidad.velocidad.toFixed(1)} km/h</p>
+                                            <p>🚗 {parseFloat(unidad.velocidad).toFixed(1)} km/h</p>
                                         )}
                                         <button 
                                             onClick={() => seleccionarUnidad(unidad)}
