@@ -38,7 +38,7 @@ function App() {
               usuario ? (
                 <Navigate to={usuario.rol === 'supervisor' ? '/mapa' : '/patrulla'} replace />
               ) : (
-                <Login onLogin={handleLogin} />
+                <Login onLoginSuccess={handleLogin} />
               )
             } 
           />
