@@ -144,7 +144,8 @@ function PantallaPatrulla() {
     detenerRastreo();
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
-    navigate('/');
+    // Recargar la página para ir al login
+    window.location.href = '/';
   };
 
   if (!usuario) {
